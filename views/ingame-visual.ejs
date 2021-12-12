@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="#">
+		<link rel="stylesheet" href="css/style.css">
+        <title>nun</title>
+		<style>
+			body{
+				margin: 0;
+				overflow: hidden;
+			}
+			#blocker {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,0.1);
+        		color: #ffffff;
+			}
+			#click-to-start {
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 14px;
+				cursor: pointer;
+			}
+			.cross {
+				height: 10px;
+				width: 10px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -5px 0px 0px -5px;
+			}
+			canvas{
+				position: absolute;
+				filter: url(#blurredVision);
+				pointer-events: none;
+				z-index: -4;
+			}
+			.object{
+				opacity: 0.6;
+			}
+
+		</style>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.min.js"></script>
+	</head>
+	<body>
+		<div class="logo-image"><svg width="72" height="25" viewBox="0 0 72 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M18 21V11C18 7.13401 14.866 4 11 4V4C7.13401 4 4 7.13401 4 11V21" stroke="#882DE3" stroke-width="7" stroke-linecap="round"/>
+			<path d="M29 4L29 14C29 17.866 32.134 21 36 21V21C39.866 21 43 17.866 43 14L43 4" stroke="#882DE3" stroke-opacity="0.5" stroke-width="7" stroke-linecap="round"/>
+			<path d="M68 21V11C68 7.13401 64.866 4 61 4V4C57.134 4 54 7.13401 54 11V21" stroke="#882DE3" stroke-width="7" stroke-linecap="round"/>
+			</svg>
+			</a>
+		</div>
+
+		<div id="blocker">
+			<div id="click-to-start">
+				<p style="font-size:36px">
+					Click to play
+				</p>
+			</div>
+		</div>
+        
+		<div class="wrapper timeover-popup">
+			<div class="popup-box">
+				<div class="popup-title">
+					<p>Time over</p>
+				</div>
+				<div class="indicator-area-01">
+					<div class="btn-area retry-btn-box">
+						<div class="btn-retry btn-retry-RG">
+							<div class="img-retry"><img src="img/retry.png" alt=""></div>
+							<p>다시하기</p>
+						</div>
+					</div>
+					<div class="btn-area stop-btn-box">
+						<div class="btn-stop btn-stop-RG">
+							<div class="img-stop"><img src="img/stop.png" alt=""></div>
+							<p>그만두기</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-next next-color-blind">
+				<h1>넘어가기</h1>
+			</div>
+		</div>
+
+		<div class="wrapper pause-popup">
+			<div class="popup-box">
+				<div class="cont-wrapper">
+					<div class="popup-title">
+						<p>Pause</p>
+					</div>
+					<div class="indicator-area-02">
+							<div class="btn-area retry-btn-box">
+								<div class="btn-retry btn-retry-V">
+									<div class="img-retry"><img src="img/retry.png" alt=""></div>
+									<p>다시하기</p>
+								</div>
+							</div>
+							<div class="btn-area continue-btn-box">
+								<div class="btn-continue btn-continue-V">
+									<div class="img-continue"><img src="img/play.png" alt=""></div>
+									<p>이어하기</p>
+								</div>
+							</div>
+							<div class="btn-area stop-btn-box">
+								<div class="btn-stop btn-stop-V">
+									<div class="img-stop"><img src="img/stop.png" alt=""></div>
+									<p>그만두기</p>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-next next-color-blind">
+				<h1>넘어가기</h1>
+			</div>
+		</div>
+
+        
+			<div class="wrapper clear-popup">
+				<div class="popup-box">
+					<div class="popup-title">
+						<p>Clear</p>
+					</div>
+					<div class="indicator-area">
+						<div class="btn-area next-btn-box">
+							<div class="btn-next btn-next-V">
+								<div class="img-retry"><img src="img/next.png" alt=""></div>
+								<p>다음 넘어가기</p>
+							</div>
+						</div>  
+					</div>
+				</div>
+			</div>
+			
+			<div class="instructions">
+				<div class="instruction">
+					<img src="img/instructon01-1.png">
+					<img src="img/instructon02-1.png">
+					<img src="img/instructon03-1.png">
+					<img src="img/instructon04-1.png">
+					<img src="img/instructon05-1.png">
+				</div>
+			</div>
+		<div class="mission">
+			<p>빨간망토 소녀는 할머니와 함께 크리스마스 트리를 꾸미려고 해요!<br>
+				즐거운 크리스마스가 될 수 있도록 빨간망토 소녀가 되어 트리를 꾸밀 물건들을 찾아주세요!
+			</p>
+		</div>
+
+		<div class="non-diegetic-ui">
+			<div class="time-bar-area">
+			   <div class="time-bar">
+				   <img src="img/timer.png">
+				   <div class="timer">
+					   <h1 id="countdown">00:00</h1>
+				   </div>
+			   </div>
+
+			   <div class="hint-btn">
+					<img src="img/hint.png">
+					<p>Hint</p>
+					<div class="hint-timer">
+						<div class="hint-timer-color"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="ingame-info-area">
+				<div class="list-title">찾아야하는 물건</div>
+				<div class="list-area">
+
+					<div id="element1" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element2" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element3" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+
+					<div id="element4" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element5" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element6" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+
+					<div id="element7" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element8" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element9" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+
+					<div id="element10" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element11" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element12" class="object">
+					<img src="img/object/dotori1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="crossWrap">
+			<div class="cross"><img src="./crosshair/crosshair.svg" alt=""></div>
+		</div>
+		<audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
+		<audio id="BGM" preload = "none"><source type="audio/mpeg"></audio>
+		<audio id="Cicada" preload = "none"><source type="audio/mpeg"></audio>
+
+	
+
+
+		
+        <svg class="sight-filter">
+			<filter id="blurredVision">
+				<feGaussianBlur in="SourceGraphic" stdDeviation="2">
+			</filter>
+		</svg>
+    	
+		<script src="js/ingame-visual-script.js"></script>
+
+		<script type="module">
+			
+		import * as THREE from './three.js-dev/build/three.module.js';
+		import * as dat from './three.js-dev/examples/jsm/libs/dat.gui.module.js';
+		import {PointerLockControls} from './three.js-dev/examples/jsm/controls/PointerLockControls.js';
+		import {GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
+		import {OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
+
+			let camera, scene, renderer, controls;
+
+			const objects = [];
+
+			let raycaster;
+
+			let moveForward = false;
+			let moveBackward = false;
+			let moveLeft = false;
+			let moveRight = false;
+
+			let goRight = 0;
+			let goForward = 0;
+
+			scene = new THREE.Scene();
+
+			// findHelper : 거리에 따라 밝기가 변하는
+
+			let findHelper = new THREE.PointLight(0xffffff, 0, 1);
+			let findHelper1 = findHelper.clone();
+			let findHelper2 = findHelper.clone();
+			let findHelper3 = findHelper.clone();
+			findHelper3.position.set(-1875, 1.5, -0.56820);
+			findHelper2.position.set(-3.8142, 1.5, -1.11);
+			findHelper1.position.set(-3.783582, 1.5, -5);
+			findHelper.position.set(-1.8160,1.2,-1.63823);
+			scene.add(findHelper3);
+			scene.add(findHelper2);
+			scene.add(findHelper1);
+			scene.add(findHelper);
+
+			let frameLighting = new THREE.PointLight(0xffffff, 0, 1);
+			frameLighting.castShadow = true;
+			frameLighting.receiveShadow = true;
+			frameLighting.position.set(0.985986, 1.7, 0.09);
+			scene.add(frameLighting);
+
+
+			// ===== GLTF 로딩 구문 =====
+			let gltfLoader = new GLTFLoader();
+
+      		// ***** 마우스 클릭을 감지할 매쉬 리스트 *****
+			let toFind = [];
+
+			function init() {
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01 , 9);
+        		camera.lookAt(100, 0, 0);
+				camera.position.set(0, 1.55, .08);
+        		// camera.position.set(0,0.87,0);
+
+				scene.background = new THREE.Color( 0xc5fffc );
+
+				scene.fog = new THREE.FogExp2( 0xc5fffc, 0.2 );
+
+				// lightings
+				const sun = new THREE.DirectionalLight( 0xffffff, 1 );
+				sun.position.set(0, 20, -4);
+
+				sun.shadow.camera = new THREE.OrthographicCamera( -100, 100, 100, -100, 1, 200 );
+				sun.castShadow = true;
+				sun.shadow.mapSize.width = 4096;
+				sun.shadow.mapSize.height = 4096;
+				sun.shadow.bias = - 0.0001;
+				scene.add(sun);
+						
+				const adjustingLight = new THREE.AmbientLight( 0xffffff, 0.4);
+				scene.add(adjustingLight);
+
+
+//======================여기서부터는 수정하지 않기=======================================
+				
+//-------------------------타이머 사전설정-------------
+				//타이머시간 설정
+				const startingMinutes = 6; //이걸로 타이머시간 조절
+					let time = startingMinutes * 60;
+
+					const countdownEl = document.getElementById('countdown');
+
+					let updateCountdown;
+
+// ---------------------- PointerLockControls---------------
+
+				controls = new PointerLockControls( camera, document.body );
+
+				// 처음 조작법화면 클릭시
+				const blocker = document.getElementById( 'blocker' );
+				const clickTostart = document.getElementById( 'click-to-start' );
+				const crossWrap = document.getElementsByClassName( 'crossWrap' );
+				const mission = document.querySelector('.mission');
+				
+				blocker.addEventListener( 'click', function () {
+					controls.lock();
+					blocker.style.pointerEvents = 'none';
+				})
+
+				//lock이 풀릴때
+				controls.addEventListener( 'lock', function () {
+					// playBGM('./sounds/river.mp3');
+					// playCicada('./sounds/Cicada.mp3');
+					blocker.style.display = 'none';
+					
+					 //타이머작동
+					updateCountdown = setInterval(function(){
+					const minutes = Math.floor(time / 60);
+					let seconds = time % 60;
+					
+
+					countdownEl.innerHTML = `${minutes<10 ? '0':''}${minutes}:${seconds<10 ? '0':''}${seconds}`;
+				
+					time--;
+
+					//00:00일때 타이머 멈추고 팝업띄우기
+					var timeoverPopup = document.querySelector('.timeover-popup');
+					
+					if (time < 0) {
+						clearInterval(updateCountdown);
+						timeoverPopup.style.display = 'block';
+						controls.unlock();
+			
+					}
+					},1000)
+					
+				} );
+
+				//일시정지
+				window.addEventListener('keydown',function(e){
+							switch(e.keyCode){
+							case 27:
+							pause();
+							break;
+						}
+					function pause(){
+						pausePopup.style.display = 'block';
+				  		blocker.style.pointerEvents = 'none';
+						  unlock();
+					}
+					
+					})
+
+				//lock이 잠길때
+				controls.addEventListener( 'unlock', function () {
+					blocker.style.display = 'block';
+					clickTostart.style.display = 'none'
+
+					clearInterval(updateCountdown);//타이머 정지
+					mission.style.display = 'none';//	
+					// pausePopup.style.display = 'block';
+				} )
+
+
+				var pausePopup = document.querySelector('.pause-popup');
+				const startBtn = document.querySelector('.continue-btn-box');
+
+				startBtn.addEventListener('click', function(){
+				pausePopup.style.display = 'none';
+				controls.lock();
+				blocker.style.pointerEvents = 'auto';
+				})
+
+
+				blocker.addEventListener('click', function(){
+					mission.style.display = 'block';
+					setTimeout(function(){//10s 후 사라짐
+						mission.style.display = 'none';
+					},10000)
+				},{once : true})
+
+//---------------------------------------------------------------------
+//======================여기까지=======================================
+
+				scene.add( controls.getObject() );
+
+				const onKeyDown = function ( event ) {
+
+					switch ( event.code ) {
+
+						case 'ArrowUp':
+						case 'KeyW':
+							moveForward = true;
+							goForward = 0.09;
+							break;
+
+						case 'ArrowLeft':
+						case 'KeyA':
+							moveLeft = true;
+							goRight = -0.09;
+							break;
+
+						case 'ArrowDown':
+						case 'KeyS':
+							moveBackward = true;
+							goForward = -0.09;
+							break;
+
+						case 'ArrowRight':
+						case 'KeyD':
+							moveRight = true;
+							goRight = 0.09;
+							break;
+							
+					}
+
+				};
+				const onKeyUp = function ( event ) {
+
+					switch ( event.code ) {
+
+						case 'ArrowUp':
+						case 'KeyW':
+							moveForward = false;
+							goForward = 0;
+							break;
+
+						case 'ArrowLeft':
+						case 'KeyA':
+							moveLeft = false;
+							goRight = 0;
+							break;
+
+						case 'ArrowDown':
+						case 'KeyS':
+							moveBackward = false;
+							goForward = 0;
+							break;
+
+						case 'ArrowRight':
+						case 'KeyD':
+							moveRight = false;
+							goRight = 0;
+							break;
+					}
+
+				};
+
+				document.addEventListener( 'keydown', onKeyDown );
+				document.addEventListener( 'keyup', onKeyUp );
+
+				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				renderer.setClearColor( 0xC1E4FA )
+				renderer.setAnimationLoop( animate );
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+				renderer.toneMapping = THREE.ACESFilmicToneMapping;     // toneMapping 속성
+				renderer.toneMappingExposure = 2;                     // 렌더러의 밝기 속성
+
+				const gridHelper = new THREE.GridHelper( 1000, 1000 );
+				scene.add( gridHelper );
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			let autumn;
+			gltfLoader.load('models/obj/autumn.gltf', function(gltf){
+				autumn = gltf.scene;
+				autumn.name = "autumn";
+				autumn.scale.set(0.09,0.09,0.09);
+				autumn.position.set(0,1.1,0);
+				scene.add(autumn);
+			});	
+
+			let dotori1;
+			gltfLoader.load('models/obj/dotori1.gltf', function(gltf){
+				dotori1 = gltf.scene;
+				dotori1.name = "dotori1";
+				dotori1.scale.set(0.09,0.09,0.09);
+				dotori1.position.set(0,1.1,0);
+				toFind.push( dotori1.getObjectByName("Cube005_Cube001"));
+				scene.add(dotori1);
+			});
+
+			let dotori2;
+			gltfLoader.load('models/obj/dotori2.gltf', function(gltf){
+				dotori2 = gltf.scene;
+				dotori2.name = "dotori2";
+				dotori2.scale.set(0.09,0.09,0.09);
+				dotori2.position.set(0,1.1,0);
+				toFind.push( dotori2.getObjectByName("Cube005_Cube002"));
+				scene.add(dotori2);
+			});
+
+			let dotori3;
+			gltfLoader.load('models/obj/dotori3.gltf', function(gltf){
+				dotori3 = gltf.scene;
+				dotori3.name = "dotori3";
+				dotori3.scale.set(0.09,0.09,0.09);
+				dotori3.position.set(0,1.1,0);
+				toFind.push( dotori3.getObjectByName("Cube005_Cube009"));
+				scene.add(dotori3);
+			});
+
+			let dotori4;
+			gltfLoader.load('models/obj/dotori4.gltf', function(gltf){
+				dotori4 = gltf.scene;
+				dotori4.name = "dotori4";
+				dotori4.scale.set(0.09,0.09,0.09);
+				dotori4.position.set(0,1.1,0);
+				toFind.push( dotori4.getObjectByName("Cube005_Cube005"));
+				scene.add(dotori4);
+			});
+
+			let dotori5;
+			gltfLoader.load('models/obj/dotori5.gltf', function(gltf){
+				dotori5 = gltf.scene;
+				dotori5.name = "dotori5";
+				dotori5.scale.set(0.09,0.09,0.09);
+				dotori5.position.set(0,1.1,0);
+				toFind.push( dotori5.getObjectByName("Cube005_Cube004"));
+				scene.add(dotori5);
+			});
+
+			let dotori6;
+			gltfLoader.load('models/obj/dotori6.gltf', function(gltf){
+				dotori6 = gltf.scene;
+				dotori6.name = "dotori6";
+				dotori6.scale.set(0.09,0.09,0.09);
+				dotori6.position.set(0,1.1,0);
+				toFind.push( dotori6.getObjectByName("Cube005_Cube010"));
+				scene.add(dotori6);
+			});
+
+			let dotori7;
+			gltfLoader.load('models/obj/dotori7.gltf', function(gltf){
+				dotori7 = gltf.scene;
+				dotori7.name = "dotori7";
+				dotori7.scale.set(0.09,0.09,0.09);
+				dotori7.position.set(0,1.1,0);
+				toFind.push( dotori7.getObjectByName("Cube005_Cube011"));
+				scene.add(dotori7);
+			});
+
+			let dotori8;
+			gltfLoader.load('models/obj/dotori8.gltf', function(gltf){
+				dotori8 = gltf.scene;
+				dotori8.name = "dotori8";
+				dotori8.scale.set(0.09,0.09,0.09);
+				dotori8.position.set(0,1.1,0);
+				toFind.push( dotori8.getObjectByName("Cube005_Cube007"));
+				scene.add(dotori8);
+			});
+
+			let dotori9;
+			gltfLoader.load('models/obj/dotori9.gltf', function(gltf){
+				dotori9 = gltf.scene;
+				dotori9.name = "dotori9";
+				dotori9.scale.set(0.09,0.09,0.09);
+				dotori9.position.set(0,1.1,0);
+				toFind.push( dotori9.getObjectByName("Cube005_Cube006"));
+				scene.add(dotori9);
+			});
+
+			let dotori10;
+			gltfLoader.load('models/obj/dotori10.gltf', function(gltf){
+				dotori10 = gltf.scene;
+				dotori10.name = "dotori10";
+				dotori10.scale.set(0.09,0.09,0.09);
+				dotori10.position.set(0,1.1,0);
+				toFind.push( dotori10.getObjectByName("Cube005_Cube003"));
+				scene.add(dotori10);
+			});
+
+			let dotori11;
+			gltfLoader.load('models/obj/dotori11.gltf', function(gltf){
+				dotori11 = gltf.scene;
+				dotori11.name = "dotori11";
+				dotori11.scale.set(0.09,0.09,0.09);
+				dotori11.position.set(0,1.1,0);
+				toFind.push( dotori11.getObjectByName("Cube005_Cube012"));
+				scene.add(dotori11);
+			});
+
+			let dotori12;
+			gltfLoader.load('models/obj/dotori12.gltf', function(gltf){
+				dotori12 = gltf.scene;
+				dotori12.name = "dotori12";
+				dotori12.scale.set(0.09,0.09,0.09);
+				dotori12.position.set(0,1.1,0);
+				toFind.push( dotori12.getObjectByName("Cube005_Cube008"));
+				scene.add(dotori12);
+			});
+
+			// ===== 마우스를 활용하기 위한 구문 =====
+			let mouse = new THREE.Vector2();
+			$(window).on('mousemove', function(event){
+            	mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+            	mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
+			});
+
+
+      		// ***** 클릭한 오브젝트 찾는 구문 ****
+			$(window).click(function(){
+				raycaster.setFromCamera(new THREE.Vector2(0,0), camera)
+        		let intersects = raycaster.intersectObjects( toFind )
+				// ***** id값 불러오기 ****
+				let element1 = document.getElementById("element1");
+				let element2 = document.getElementById("element2");
+				let element3 = document.getElementById("element3");
+				let element4 = document.getElementById("element4");
+				let element5 = document.getElementById("element5");
+				let element6 = document.getElementById("element6");
+				let element7 = document.getElementById("element7");
+				let element8 = document.getElementById("element8");
+				let element9 = document.getElementById("element9");
+				let element10 = document.getElementById("element10");
+				let element11 = document.getElementById("element11");
+				let element12 = document.getElementById("element12");
+				// console.log(scene);
+				// toFind 배열로 raycaster를 진행
+				if(intersects.length > 0){
+         	 		// 찾은 object는 intersects[0].object 로 받아옴
+					let foundMesh = intersects[0].object;
+					if (foundMesh.name === "Cube005_Cube001") {
+						scene.getObjectByName("dotori1").visible = false;
+						element1.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube002") {
+						scene.getObjectByName("dotori2").visible = false;
+						element2.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube009") {
+						scene.getObjectByName("dotori3").visible = false;
+						element3.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube005") {
+						scene.getObjectByName("dotori4").visible = false;
+						element4.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube004") {
+						scene.getObjectByName("dotori5").visible = false;
+						element5.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube010") {
+						scene.getObjectByName("dotori6").visible = false;
+						element6.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube011") {
+						scene.getObjectByName("dotori7").visible = false;
+						element7.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube007") {
+						scene.getObjectByName("dotori8").visible = false;
+						element8.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube006") {
+						scene.getObjectByName("dotori9").visible = false;
+						element9.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube003") {
+						scene.getObjectByName("dotori10").visible = false;
+						element10.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube012") {
+						scene.getObjectByName("dotori11").visible = false;
+						element11.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "Cube005_Cube008") {
+						scene.getObjectByName("dotori12").visible = false;
+						element12.style.opacity = 1;
+					}
+				};
+				scene.updateMatrix();
+				console.log(toFind);
+				}
+			);
+			
+      		function animate() {
+				// console.log(camera.position);
+				// console.log(camera.position.distanceTo(frameLighting.position));
+				if ( controls.isLocked === true ) {
+					controls.moveRight( goRight );
+					controls.moveForward( goForward );
+				}
+
+			renderer.render( scene, camera );
+		}
+
+		function playSound(_url){
+				$('#sound')[0].pause();
+				$('#sound').attr('src' , _url);
+				$('#sound')[0].play();
+		}
+		function playBGM(_url){
+			$('#BGM')[0].pause();
+			$('#BGM').attr('src' , _url);
+			$('#BGM')[0].currentTime=0;
+			$('#BGM')[0].play();
+		}
+		function playCicada(_url){
+				$('#Cicada')[0].pause();
+				$('#Cicada').attr('src' , _url);
+				$('#Cicada')[0].currentTime=0;
+				$('#Cicada')[0].play();
+		}
+		function stopCicada(_url){
+				$('#Cicada')[0].pause();
+		}
+
+    init();
+	animate();
+
+		</script>
+	</body>
+</html>

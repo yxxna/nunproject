@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="#">
+		<link rel="stylesheet" href="css/style.css">
+        <title>nun</title>
+		<style>
+			body{
+				margin: 0;
+				overflow: hidden;
+			}
+			#blocker {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,0.7);
+        		color: #fff;
+			}
+			#click-to-start {
+				width: 100%;
+				height: 100%;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				text-align: center;
+				font-size: 14px;
+				cursor: pointer;
+			}
+			.cross {
+				height: 10px;
+				width: 10px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -5px 0px 0px -5px;
+			}
+			canvas{
+				position: absolute;
+				filter: url(#deuteranopia);
+				pointer-events: none;
+				z-index: -2;
+				margin-top: -18px;
+			}
+			.object{
+				opacity: 0.6;
+			}
+
+		</style>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.min.js"></script>
+	</head>
+	<body>
+		<div class="logo-image"><svg width="72" height="25" viewBox="0 0 72 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M18 21V11C18 7.13401 14.866 4 11 4V4C7.13401 4 4 7.13401 4 11V21" stroke="#882DE3" stroke-width="7" stroke-linecap="round"/>
+			<path d="M29 4L29 14C29 17.866 32.134 21 36 21V21C39.866 21 43 17.866 43 14L43 4" stroke="#882DE3" stroke-opacity="0.5" stroke-width="7" stroke-linecap="round"/>
+			<path d="M68 21V11C68 7.13401 64.866 4 61 4V4C57.134 4 54 7.13401 54 11V21" stroke="#882DE3" stroke-width="7" stroke-linecap="round"/>
+			</svg>
+			</a>
+		</div>
+		
+		<div id="blocker">
+			<div id="click-to-start">
+				<p style="font-size:36px">
+					Click to play
+				</p>
+			</div>
+		</div>
+        
+		<div class="wrapper timeover-popup">
+			<div class="popup-box">
+				<div class="popup-title">
+					<p>Time over</p>
+				</div>
+				<div class="indicator-area-01">
+					<div class="btn-area retry-btn-box">
+						<div class="btn-retry btn-retry-RG">
+							<div class="img-retry"><img src="img/retry.png" alt=""></div>
+							<p>다시하기</p>
+						</div>
+					</div>
+					<div class="btn-area stop-btn-box">
+						<div class="btn-stop btn-stop-RG">
+							<div class="img-stop"><img src="img/stop.png" alt=""></div>
+							<p>그만두기</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-next next-color-blind">
+				<h1>넘어가기</h1>
+			</div>
+		</div>
+
+		<div class="wrapper pause-popup">
+			<div class="popup-box">
+				<div class="cont-wrapper">
+					<div class="popup-title">
+						<p>Pause</p>
+					</div>
+					<div class="indicator-area-02">
+							<div class="btn-area retry-btn-box">
+								<div class="btn-retry btn-retry-RG">
+									<div class="img-retry"><img src="img/retry.png" alt=""></div>
+									<p>다시하기</p>
+								</div>
+							</div>
+							<div class="btn-area continue-btn-box">
+								<div class="btn-continue btn-continue-RG">
+									<div class="img-continue"><img src="img/play.png" alt=""></div>
+									<p>이어하기</p>
+								</div>
+							</div>
+							<div class="btn-area stop-btn-box">
+								<div class="btn-stop btn-stop-RG">
+									<div class="img-stop"><img src="img/stop.png" alt=""></div>
+									<p>그만두기</p>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-next next-color-blind">
+				<h1>넘어가기</h1>
+			</div>
+		</div>
+
+        
+			<div class="wrapper clear-popup">
+				<div class="popup-box">
+					<div class="popup-title">
+						<p>Clear</p>
+					</div>
+					<div class="indicator-area">
+						<div class="btn-area next-btn-box">
+							<div class="btn-next btn-next-RG">
+								<div class="img-retry"><img src="img/next.png" alt=""></div>
+								<p>다음 넘어가기</p>
+							</div>
+						</div>  
+					</div>
+				</div>
+			</div>
+
+		<div class="instructions">
+			<div class="instruction">
+				<img src="img/instructon01.png">
+					<img src="img/instructon02.png">
+					<img src="img/instructon03.png">
+					<img src="img/instructon04.png">
+					<img src="img/instructon05.png">
+			</div>
+		</div>
+		<div class="mission">
+			<p>빨간망토 소녀는 할머니와 함께 소풍 가려고 해요!<br>
+				즐거운 소풍이 될 수 있도록 빨간망토 소녀가 되어 가져갈 물건들을 찾아주세요!
+			</p>
+		</div>
+		<div class="non-diegetic-ui">
+			<div class="time-bar-area">
+			   <div class="time-bar">
+				   <img src="img/timer.png">
+				   <div class="timer">
+					   <h1 id="countdown">00:00</h1>
+				   </div>
+			   </div>
+
+			   <div class="hint-btn">
+					<img src="img/hint.png">
+					<p>Hint</p>
+					<div class="hint-timer">
+						<div class="hint-timer-color"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="ingame-info-area">
+				<div class="list-title">찾아야하는 물건</div>
+				<div class="list-area">
+
+					<div id="element1" class="object">
+					<img src="img/object/apple1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element2" class="object">
+					<img src="img/object/apple1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element3" class="object">
+					<img src="img/object/apple1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+
+					<div id="element4" class="object">
+					<img src="img/object/radish1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element5" class="object">
+					<img src="img/object/radish1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+					<div id="element6" class="object">
+					<img src="img/object/dounut1.png">
+					<!-- <p>빨간 사과</p> -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="crossWrap">
+			<div class="cross"><img src="./crosshair/crosshair.svg" alt=""></div>
+		</div>
+		<audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
+		<audio id="BGM" preload = "none"><source type="audio/mpeg"></audio>
+		<audio id="Cicada" preload = "none"><source type="audio/mpeg"></audio>
+
+
+		
+        <svg class="red-green-filter" width="0" height="0">
+            <filter id="deuteranopia">
+                <feColorMatrix values="0.367  0.861 -0.228  0.000  0.000
+                            0.280  0.673  0.047  0.000  0.000
+                            -0.012  0.043  0.969  0.000  0.000
+                            0.000  0.000  0.000  1.000  0.000" />
+            </filter>
+        </svg>
+    	
+		<script src="js/ingame-redgreen-script.js"></script>
+
+		<script type="module">
+			
+		import * as THREE from './three.js-dev/build/three.module.js';
+		import * as dat from './three.js-dev/examples/jsm/libs/dat.gui.module.js';
+		import {PointerLockControls} from './three.js-dev/examples/jsm/controls/PointerLockControls.js';
+		import {GLTFLoader} from './three.js-dev/examples/jsm/loaders/GLTFLoader.js';
+		import {OBJLoader} from './three.js-dev/examples/jsm/loaders/OBJLoader.js';
+
+			let camera, scene, renderer, controls;
+
+			const objects = [];
+
+			let raycaster;
+
+			let moveForward = false;
+			let moveBackward = false;
+			let moveLeft = false;
+			let moveRight = false;
+
+			let goRight = 0;
+			let goForward = 0;
+
+			scene = new THREE.Scene();
+
+			// findHelper : 거리에 따라 밝기가 변하는
+
+			let findHelper = new THREE.PointLight(0xffffff, 0, 1);
+			let findHelper1 = findHelper.clone();
+			let findHelper2 = findHelper.clone();
+			let findHelper3 = findHelper.clone();
+			findHelper3.position.set(-1875, 1.5, -0.56820);
+			findHelper2.position.set(-3.8142, 1.5, -1.11);
+			findHelper1.position.set(-3.783582, 1.5, -5);
+			findHelper.position.set(-1.8160,1.2,-1.63823);
+			scene.add(findHelper3);
+			scene.add(findHelper2);
+			scene.add(findHelper1);
+			scene.add(findHelper);
+
+			let frameLighting = new THREE.PointLight(0xffffff, 0, 1);
+			frameLighting.castShadow = true;
+			frameLighting.receiveShadow = true;
+			frameLighting.position.set(0.985986, 1.7, 0.09);
+			scene.add(frameLighting);
+
+
+			// ===== GLTF 로딩 구문 =====
+			let gltfLoader = new GLTFLoader();
+
+      		// ***** 마우스 클릭을 감지할 매쉬 리스트 *****
+			let toFind = [];
+
+			function init() {
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01 , 9);
+        		camera.lookAt(100, 0, 0);
+				camera.position.set(0, 1.55, .08);
+        		// camera.position.set(0,0.87,0);
+
+				scene.background = new THREE.Color( 0xc5fffc );
+
+				scene.fog = new THREE.FogExp2( 0xc5fffc, 0.2 );
+
+				// lightings
+				const sun = new THREE.DirectionalLight( 0xffffff, 1 );
+				sun.position.set(0, 20, -4);
+
+				sun.shadow.camera = new THREE.OrthographicCamera( -100, 100, 100, -100, 1, 200 );
+				sun.castShadow = true;
+				sun.shadow.mapSize.width = 4096;
+				sun.shadow.mapSize.height = 4096;
+				sun.shadow.bias = - 0.0001;
+				scene.add(sun);
+						
+				const adjustingLight = new THREE.AmbientLight( 0xffffff, 0.4);
+				scene.add(adjustingLight);
+
+//======================여기서부터는 수정하지 않기=======================================				
+
+//-------------------------타이머 사전설정-------------
+				//타이머시간 설정
+				const startingMinutes = 6; //이걸로 타이머시간 조절
+					let time = startingMinutes * 60;
+
+					const countdownEl = document.getElementById('countdown');
+
+					let updateCountdown;
+
+// ---------------------- PointerLockControls---------------
+
+				controls = new PointerLockControls( camera, document.body );
+
+				// 처음 조작법화면 클릭시
+				const blocker = document.getElementById( 'blocker' );
+				const clickTostart = document.getElementById( 'click-to-start' );
+				const crossWrap = document.getElementsByClassName( 'crossWrap' );
+				const mission = document.querySelector('.mission');
+				
+				blocker.addEventListener( 'click', function () {
+					controls.lock();
+					blocker.style.pointerEvents = 'none';
+				})
+
+				//lock이 풀릴때
+				controls.addEventListener( 'lock', function () {
+					// playBGM('./sounds/river.mp3');
+					// playCicada('./sounds/Cicada.mp3');
+					blocker.style.display = 'none';
+					
+					 //타이머작동
+					updateCountdown = setInterval(function(){
+					const minutes = Math.floor(time / 60);
+					let seconds = time % 60;
+					
+
+					countdownEl.innerHTML = `${minutes<10 ? '0':''}${minutes}:${seconds<10 ? '0':''}${seconds}`;
+				
+					time--;
+
+					//00:00일때 타이머 멈추고 팝업띄우기
+					var timeoverPopup = document.querySelector('.timeover-popup');
+					
+					if (time < 0) {
+						clearInterval(updateCountdown);
+						timeoverPopup.style.display = 'block';
+						controls.unlock();
+			
+					}
+					},1000)
+					
+				} );
+
+				//일시정지-esc더블클릭
+				window.addEventListener('keydown',function(e){
+							switch(e.keyCode){
+							case 27:
+							pause();
+							break;
+						}
+					function pause(){
+						pausePopup.style.display = 'block';
+				  		blocker.style.pointerEvents = 'none';
+						  unlock();
+					}
+					
+					})
+
+				//lock이 잠길때
+				controls.addEventListener( 'unlock', function () {
+					blocker.style.display = 'block';
+					clickTostart.style.display = 'none'
+
+					clearInterval(updateCountdown);//타이머 정지
+					mission.style.display = 'none';//	
+					// pausePopup.style.display = 'block';
+				} )
+
+
+				var pausePopup = document.querySelector('.pause-popup');
+				const startBtn = document.querySelector('.continue-btn-box');
+
+				startBtn.addEventListener('click', function(){
+				pausePopup.style.display = 'none';
+				controls.lock();
+				blocker.style.pointerEvents = 'auto';
+				})
+
+
+				blocker.addEventListener('click', function(){
+					mission.style.display = 'block';
+					setTimeout(function(){//10s 후 사라짐
+						mission.style.display = 'none';
+					},10000)
+				},{once : true})
+
+//--------------------------------------------------------------------	
+//======================여기까지=======================================
+
+
+				scene.add( controls.getObject() );
+
+				const onKeyDown = function ( event ) {
+
+					switch ( event.code ) {
+
+						case 'ArrowUp':
+						case 'KeyW':
+							moveForward = true;
+							goForward = 0.09;
+							break;
+
+						case 'ArrowLeft':
+						case 'KeyA':
+							moveLeft = true;
+							goRight = -0.09;
+							break;
+
+						case 'ArrowDown':
+						case 'KeyS':
+							moveBackward = true;
+							goForward = -0.09;
+							break;
+
+						case 'ArrowRight':
+						case 'KeyD':
+							moveRight = true;
+							goRight = 0.09;
+							break;
+							
+					}
+
+				};
+				const onKeyUp = function ( event ) {
+
+					switch ( event.code ) {
+
+						case 'ArrowUp':
+						case 'KeyW':
+							moveForward = false;
+							goForward = 0;
+							break;
+
+						case 'ArrowLeft':
+						case 'KeyA':
+							moveLeft = false;
+							goRight = 0;
+							break;
+
+						case 'ArrowDown':
+						case 'KeyS':
+							moveBackward = false;
+							goForward = 0;
+							break;
+
+						case 'ArrowRight':
+						case 'KeyD':
+							moveRight = false;
+							goRight = 0;
+							break;
+					}
+				};
+
+				document.addEventListener( 'keydown', onKeyDown );
+				document.addEventListener( 'keyup', onKeyUp );
+
+				raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				renderer.setClearColor( 0xC1E4FA )
+				renderer.setAnimationLoop( animate );
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+				renderer.toneMapping = THREE.ACESFilmicToneMapping;     // toneMapping 속성
+				renderer.toneMappingExposure = 2;                     // 렌더러의 밝기 속성
+
+				const gridHelper = new THREE.GridHelper( 1000, 1000 );
+				scene.add( gridHelper );
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			let matImg = new THREE.TextureLoader().load('texture/mat.png');
+			let mattexture = new THREE.MeshStandardMaterial({map: matImg, roughness: 0.55, metalness: 0.5, flatShading:true});
+
+			let hankieImg = new THREE.TextureLoader().load('texture/hankie.png');
+			let hankietexture = new THREE.MeshStandardMaterial({map: hankieImg, roughness: 0.55, metalness: 0.5, flatShading:true});
+
+
+			let matOBJLoader = new OBJLoader();
+			let mat;
+
+			matOBJLoader.load('models/obj/mat.obj', function(mat){
+				mat.traverse(function (child) {
+				if (child instanceof THREE.Mesh) {
+					child.material = mattexture
+				}
+				});
+				mat.scale.set(0.09,0.09,0.09);
+				mat.position.set(0,1.1,0);
+				scene.add(mat);
+			});
+
+			let hankieOBJLoader = new OBJLoader();
+			let hankie;
+
+			hankieOBJLoader.load('models/obj/hankie.obj', function(hankie){
+				hankie.traverse(function (child) {
+				if (child instanceof THREE.Mesh) {
+					child.material = hankietexture
+				}
+				});
+				hankie.scale.set(0.09,0.09,0.09);
+				hankie.position.set(0,1.1,0);
+				scene.add(hankie);
+			});
+
+			let spring;
+			gltfLoader.load('models/obj/spring.gltf', function(gltf){
+				spring = gltf.scene;
+				spring.name = "spring";
+				spring.scale.set(0.09,0.09,0.09);
+				spring.position.set(0,1.1,0);
+				scene.add(spring);
+			});	
+
+			let apple1;
+			gltfLoader.load('models/obj/apple1.gltf', function(gltf){
+				apple1 = gltf.scene;
+				apple1.name = "apple1";
+				apple1.scale.set(0.09,0.09,0.09);
+				apple1.position.set(0,1.1,0);
+				toFind.push( apple1.getObjectByName("model1325"));
+				scene.add(apple1);
+			});	
+
+			let findapple1;
+			gltfLoader.load('models/obj/findapple1.gltf', function(gltf){
+				findapple1 = gltf.scene;
+				findapple1.name = "findapple1";
+				findapple1.scale.set(0.09,0.09,0.09);
+				findapple1.position.set(0,1.1,0);
+			});	
+
+			let apple2;
+			gltfLoader.load('models/obj/apple2.gltf', function(gltf){
+				apple2 = gltf.scene;
+				apple2.name = "apple2";
+				apple2.scale.set(0.09,0.09,0.09);
+				apple2.position.set(0,1.1,0);
+				toFind.push( apple2.getObjectByName("model1348"));
+				scene.add(apple2);
+			});	
+
+			let findapple2;
+			gltfLoader.load('models/obj/findapple2.gltf', function(gltf){
+				findapple2 = gltf.scene;
+				findapple2.name = "findapple2";
+				findapple2.scale.set(0.09,0.09,0.09);
+				findapple2.position.set(0,1.1,0);
+			});	
+
+			let apple3;
+			gltfLoader.load('models/obj/apple3.gltf', function(gltf){
+				apple3 = gltf.scene;
+				apple3.name = "apple3";
+				apple3.scale.set(0.09,0.09,0.09);
+				apple3.position.set(0,1.1,0);
+				toFind.push( apple3.getObjectByName("model1309"));
+				scene.add(apple3);
+			});	
+
+			let findapple3;
+			gltfLoader.load('models/obj/findapple3.gltf', function(gltf){
+				findapple3 = gltf.scene;
+				findapple3.name = "findapple3";
+				findapple3.scale.set(0.09,0.09,0.09);
+				findapple3.position.set(0,1.1,0);
+			});	
+
+			let radish1;
+			gltfLoader.load('models/obj/radish1.gltf', function(gltf){
+				radish1 = gltf.scene;
+				radish1.name = "radish1";
+				radish1.scale.set(0.09,0.09,0.09);
+				radish1.position.set(0,1.1,0);
+				toFind.push( radish1.getObjectByName("model1297"));
+				scene.add(radish1);
+			});	
+
+			let findradish1;
+			gltfLoader.load('models/obj/findradish1.gltf', function(gltf){
+				findradish1 = gltf.scene;
+				findradish1.name = "findradish1";
+				findradish1.scale.set(0.09,0.09,0.09);
+				findradish1.position.set(0,1.1,0);
+			});	
+
+			let radish2;
+			gltfLoader.load('models/obj/radish2.gltf', function(gltf){
+				radish2 = gltf.scene;
+				radish2.name = "radish2";
+				radish2.scale.set(0.09,0.09,0.09);
+				radish2.position.set(0,1.1,0);
+				toFind.push( radish2.getObjectByName("model1291"));
+				scene.add(radish2);
+			});	
+
+			let findradish2;
+			gltfLoader.load('models/obj/findradish2.gltf', function(gltf){
+				findradish2 = gltf.scene;
+				findradish2.name = "findradish2";
+				findradish2.scale.set(0.09,0.09,0.09);
+				findradish2.position.set(0,1.1,0);
+			});	
+
+			let donut;
+			gltfLoader.load('models/obj/donut.gltf', function(gltf){
+				donut = gltf.scene;
+				donut.name = "donut";
+				donut.scale.set(0.09,0.09,0.09);
+				donut.position.set(0,1.1,0);
+				toFind.push( donut.getObjectByName("model1334"));
+				scene.add(donut);
+			});	
+
+			let finddonut;
+			gltfLoader.load('models/obj/finddonut.gltf', function(gltf){
+				finddonut = gltf.scene;
+				finddonut.name = "finddonut";
+				finddonut.scale.set(0.09,0.09,0.09);
+				finddonut.position.set(0,1.1,0);
+			});	
+
+			// ===== 마우스를 활용하기 위한 구문 =====
+			let mouse = new THREE.Vector2();
+			$(window).on('mousemove', function(event){
+            	mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+            	mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
+			});
+
+      		// ***** 클릭한 오브젝트 찾는 구문 ****
+			  $(window).click(function(){
+				raycaster.setFromCamera(new THREE.Vector2(0,0), camera)
+        		let intersects = raycaster.intersectObjects( toFind )
+				// ***** id값 불러오기 ****
+				let element1 = document.getElementById("element1");
+				let element2 = document.getElementById("element2");
+				let element3 = document.getElementById("element3");
+				let element4 = document.getElementById("element4");
+				let element5 = document.getElementById("element5");
+				let element6 = document.getElementById("element6");
+				// console.log(scene);
+				// toFind 배열로 raycaster를 진행
+				if(intersects.length > 0){
+         	 		// 찾은 object는 intersects[0].object 로 받아옴
+					let foundMesh = intersects[0].object;
+					if (foundMesh.name === "model1325") {
+						scene.getObjectByName("apple1").visible = false;
+						scene.add(findapple1);
+						element1.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "model1348") {
+						scene.getObjectByName("apple2").visible = false;
+						scene.add(findapple2);
+						element2.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "model1309") {
+						scene.getObjectByName("apple3").visible = false;
+						scene.add(findapple3);
+						element3.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "model1334") {
+						scene.getObjectByName("donut").visible = false;
+						scene.add(finddonut);
+						element6.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "model1297") {
+						scene.getObjectByName("radish1").visible = false;
+						scene.add(findradish1);
+						element5.style.opacity = 1;
+					}
+					else if ( foundMesh.name === "model1291") {
+						scene.getObjectByName("radish2").visible = false;
+						scene.add(findradish2);
+						element4.style.opacity = 1;
+					}
+				};
+				scene.updateMatrix();
+				console.log(toFind);
+				}
+			);
+
+			let findelement1 = $('#element1').css('opacity');
+			let findelement2 = $('#element2').css('opacity');
+			let findelement3 = $('#element3').css('opacity');
+			let findelement4 = $('#element4').css('opacity');
+			let findelement5 = $('#element5').css('opacity');
+			let findelement6 = $('#element6').css('opacity');
+
+			if (findelement1 == '1' || findelement2 == '1' || findelement3 == '1' || findelement4 == '1' || findelement5 == '1' || findelement6 == '1'){
+				$('.pause-popup').fadeIn();
+			}
+			
+      		function animate() {
+				// console.log(camera.position);
+				// console.log(camera.position.distanceTo(frameLighting.position));
+				if ( controls.isLocked === true ) {
+					controls.moveRight( goRight );
+					controls.moveForward( goForward );
+				}
+
+			renderer.render( scene, camera );
+		}
+
+    init();
+	animate();
+
+		</script>
+	</body>
+</html>
