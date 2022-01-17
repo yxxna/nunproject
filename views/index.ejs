@@ -147,14 +147,26 @@
 </html>
 <!-- 복붙할 부분3 시작  -->
 <script>
-    $(window).resize(function (){
-        let width_size = window.outerWidth;
+    // $(window).resize(function (){
+    //     let width_size = window.outerWidth;
         
-        if(width_size <= 1040){
-            $('.lock-alert-box').css('display','block');
-            $('.container').css('display','none');
-            $('#fp-nav').css('display','none');
-        }
-    })
+    //     if(width_size <= 1280){
+    //         $('.lock-alert-box').css('display','block');
+    //         $('.container').css('display','none');
+    //         $('#fp-nav').css('display','none');
+    //     }
+    // })
+
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ? true : false;
+    jQuery(document).ready(function($){
+    if(!isMobile) {
+            
+    }else{
+        $('.lock-alert-box').css('display','block');
+        $('.container').css('display','none');
+        $('#fp-nav').css('display','none');
+    }
+});
+
 </script>
 <!-- 복붙할 부분3 시작  -->
