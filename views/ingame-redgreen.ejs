@@ -32,16 +32,20 @@
 				cursor: pointer;
 			}
 			.cross {
-				height: 10px;
-				width: 10px;
+				height: 50px;
+				width: 50px;
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				margin: -5px 0px 0px -5px;
+				margin: -25px 0px 0px -25px;
 			}
 			canvas{
 				position: absolute;
 				filter: url(#deuteranopia);
+				-webkit-filter: url(#deuteranopia);
+				-moz-filter: url(#deuteranopia);
+				-ms-filter: url(#deuteranopia);
+				-o-filter: url(#deuteranopia);
 				pointer-events: none;
 				z-index: -2;
 				margin-top: -18px;
@@ -156,8 +160,8 @@
 			</div>
 		</div>
 		<div class="mission">
-			<p>파릇파릇한 봄 소풍을 가려고 해요!<br>
-				적녹색맹의 시선으로 곳곳에 놓여진 음식을 찾아 소풍 준비를 완료해 주세요!
+			<p>빨간망토 소녀는 할머니와 함께 소풍 가려고 해요!<br>
+				즐거운 소풍이 될 수 있도록 빨간망토 소녀가 되어 가져갈 물건들을 찾아주세요!
 			</p>
 		</div>
 		<div class="non-diegetic-ui">
@@ -214,12 +218,10 @@
 		<div class="crossWrap">
 			<div class="cross"><img src="./crosshair/crosshair.svg" alt=""></div>
 		</div>
+
+    <!-- Sounds -->
 		<audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="BGM" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="Cicada" preload = "none"><source type="audio/mpeg"></audio>
-
-
-		
+    
         <svg class="red-green-filter" width="0" height="0">
             <filter id="deuteranopia">
                 <feColorMatrix values="0.367  0.861 -0.228  0.000  0.000
@@ -311,7 +313,7 @@
 
 //-------------------------타이머 사전설정-------------
 				//타이머시간 설정
-				const startingMinutes = 6; //이걸로 타이머시간 조절
+				const startingMinutes = 3; //이걸로 타이머시간 조절
 					let time = startingMinutes * 60;
 
 					const countdownEl = document.getElementById('countdown');
@@ -679,31 +681,37 @@
 						scene.getObjectByName("apple1").visible = false;
 						scene.add(findapple1);
 						element1.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "model1348") {
 						scene.getObjectByName("apple2").visible = false;
 						scene.add(findapple2);
 						element2.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "model1309") {
 						scene.getObjectByName("apple3").visible = false;
 						scene.add(findapple3);
 						element3.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "model1334") {
 						scene.getObjectByName("donut").visible = false;
 						scene.add(finddonut);
 						element6.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "model1297") {
 						scene.getObjectByName("radish1").visible = false;
 						scene.add(findradish1);
 						element5.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "model1291") {
 						scene.getObjectByName("radish2").visible = false;
 						scene.add(findradish2);
 						element4.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 				};
 				scene.updateMatrix();
@@ -729,10 +737,16 @@
 					controls.moveRight( goRight );
 					controls.moveForward( goForward );
 				}
-
+        
+        
 			renderer.render( scene, camera );
-		}
 
+		}
+		function playSound(_url){
+				$('#sound')[0].pause();
+				$('#sound').attr('src' , _url);
+				$('#sound')[0].play();
+		    }
     init();
 	animate();
 

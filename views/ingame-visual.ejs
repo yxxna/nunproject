@@ -32,16 +32,20 @@
 				cursor: pointer;
 			}
 			.cross {
-				height: 10px;
-				width: 10px;
+				height: 50px;
+				width: 50px;
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				margin: -5px 0px 0px -5px;
+				margin: -25px 0px 0px -25px;
 			}
 			canvas{
 				position: absolute;
 				filter: url(#blurredVision);
+				-webkit-filter: url(#blurredVision);
+				-moz-filter: url(#blurredVision);
+				-ms-filter: url(#blurredVision);
+				-o-filter: url(#blurredVision);
 				pointer-events: none;
 				z-index: -4;
 			}
@@ -155,8 +159,8 @@
 				</div>
 			</div>
 		<div class="mission">
-			<p>서늘서늘한 가을, 도토리가 많이 떨어졌어요!<br> 
-				저시력자의 시선으로 곳곳에 놓여진 도토리를 모두 주워주세요!
+			<p>빨간망토 소녀는 할머니와 함께 크리스마스 트리를 꾸미려고 해요!<br>
+				즐거운 크리스마스가 될 수 있도록 빨간망토 소녀가 되어 트리를 꾸밀 물건들을 찾아주세요!
 			</p>
 		</div>
 
@@ -241,8 +245,6 @@
 			<div class="cross"><img src="./crosshair/crosshair.svg" alt=""></div>
 		</div>
 		<audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="BGM" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="Cicada" preload = "none"><source type="audio/mpeg"></audio>
 
 	
 
@@ -337,7 +339,7 @@
 				
 //-------------------------타이머 사전설정-------------
 				//타이머시간 설정
-				const startingMinutes = 6; //이걸로 타이머시간 조절
+				const startingMinutes = 3; //이걸로 타이머시간 조절
 					let time = startingMinutes * 60;
 
 					const countdownEl = document.getElementById('countdown');
@@ -688,50 +690,62 @@
 					if (foundMesh.name === "Cube005_Cube001") {
 						scene.getObjectByName("dotori1").visible = false;
 						element1.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube002") {
 						scene.getObjectByName("dotori2").visible = false;
 						element2.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube009") {
 						scene.getObjectByName("dotori3").visible = false;
 						element3.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube005") {
 						scene.getObjectByName("dotori4").visible = false;
 						element4.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube004") {
 						scene.getObjectByName("dotori5").visible = false;
 						element5.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube010") {
 						scene.getObjectByName("dotori6").visible = false;
 						element6.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube011") {
 						scene.getObjectByName("dotori7").visible = false;
 						element7.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube007") {
 						scene.getObjectByName("dotori8").visible = false;
 						element8.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube006") {
 						scene.getObjectByName("dotori9").visible = false;
 						element9.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube003") {
 						scene.getObjectByName("dotori10").visible = false;
 						element10.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube012") {
 						scene.getObjectByName("dotori11").visible = false;
 						element11.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube005_Cube008") {
 						scene.getObjectByName("dotori12").visible = false;
 						element12.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 				};
 				scene.updateMatrix();
@@ -754,21 +768,6 @@
 				$('#sound')[0].pause();
 				$('#sound').attr('src' , _url);
 				$('#sound')[0].play();
-		}
-		function playBGM(_url){
-			$('#BGM')[0].pause();
-			$('#BGM').attr('src' , _url);
-			$('#BGM')[0].currentTime=0;
-			$('#BGM')[0].play();
-		}
-		function playCicada(_url){
-				$('#Cicada')[0].pause();
-				$('#Cicada').attr('src' , _url);
-				$('#Cicada')[0].currentTime=0;
-				$('#Cicada')[0].play();
-		}
-		function stopCicada(_url){
-				$('#Cicada')[0].pause();
 		}
 
     init();

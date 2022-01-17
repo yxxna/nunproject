@@ -32,16 +32,20 @@
 				cursor: pointer;
 			}
 			.cross {
-				height: 10px;
-				width: 10px;
+				height: 50px;
+				width: 50px;
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				margin: -5px 0px 0px -5px;
+				margin: -25px 0px 0px -25px;
 			}
 			canvas{
 				position: absolute;
 				filter: url(#tritanopia);
+				-webkit-filter: url(#tritanopia);
+				-moz-filter: url(#tritanopia);
+				-ms-filter: url(#tritanopia);
+				-o-filter: url(#tritanopia);
 				pointer-events: none;
 				z-index: -2;
 				margin-top: -18px;
@@ -156,8 +160,9 @@
 				</div>
 			</div>
 		<div class="mission">
-			<p>크리스마스의 계절, 겨울이 왔어요!<br>
-				청황색맹의 시선으로 곳곳에 놓여진 크리스마스 트리 장식품을 찾아 트리 꾸미기를 완료해 주세요!
+			<p>빨간망토 소녀는 할머니와 함께 크리스마스 트리를 꾸미려고 해요!<br>
+				그러나 트리 장식들이 바람에 날아가 버렸어요<br>
+				즐거운 크리스마스가 될 수 있도록 빨간망토 소녀가 되어 날아가버린 트리 장식들을 찾아주세요!
 			</p>
 		</div>
 		<div class="non-diegetic-ui">
@@ -214,13 +219,11 @@
 		<div class="crossWrap">
 			<div class="cross"><img src="./crosshair/crosshair.svg" alt=""></div>
 		</div>
-		<audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="BGM" preload = "none"><source type="audio/mpeg"></audio>
-		<audio id="Cicada" preload = "none"><source type="audio/mpeg"></audio>
 
-
-		
-        <svg class="blue-yellow-filter" width="0" height="0">
+    <!-- Sounds -->
+    <audio id="sound" preload = "none"><source type="audio/mpeg"></audio>
+	
+    <svg class="blue-yellow-filter" width="0" height="0">
 			<filter id="tritanopia">
 				<feColorMatrix values="1.256 -0.077 -0.179  0.000  0.000
 									-0.078  0.931  0.148  0.000  0.000
@@ -303,7 +306,7 @@
 //======================여기서부터는 수정하지 않기=======================================
 //-------------------------타이머 사전설정-------------
 				//타이머시간 설정
-				const startingMinutes = 6; //이걸로 타이머시간 조절
+				const startingMinutes = 3; //이걸로 타이머시간 조절
 					let time = startingMinutes * 60;
 
 					const countdownEl = document.getElementById('countdown');
@@ -626,31 +629,37 @@
 						scene.getObjectByName("hiddenstar").visible = false;
 						scene.add(findstar);
 						element4.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube001_Cube002") {
 						scene.getObjectByName("hiddensocks1").visible = false;
 						scene.add(findsocks1);
 						element5.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "Cube001_Cube001") {
 						scene.getObjectByName("hiddensocks2").visible = false;
 						scene.add(findsocks2);
 						element6.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "ornament_Icosphere044") {
 						scene.getObjectByName("ornament1").visible = false;
 						scene.add(findornament1);
 						element1.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "ornament_Icosphere006") {
 						scene.getObjectByName("ornament2").visible = false;
 						scene.add(findornament2);
 						element2.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 					else if ( foundMesh.name === "ornament_Icosphere020") {
 						scene.getObjectByName("ornament3").visible = false;
 						scene.add(findornament3);
 						element3.style.opacity = 1;
+            playSound('./sounds/click.mp3')
 					}
 				};
 				scene.updateMatrix();
@@ -666,9 +675,15 @@
 					controls.moveForward( goForward );
 				}
 
+        
+
 			renderer.render( scene, camera );
 		}
-
+		function playSound(_url){
+				$('#sound')[0].pause();
+				$('#sound').attr('src' , _url);
+				$('#sound')[0].play();
+		    }
     init();
 	animate();
 

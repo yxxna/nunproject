@@ -4,11 +4,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nun</title>
+    <title>Document</title>
     <link rel="stylesheet" href="css/landing_style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="js/jquery.fullPage.js"></script>
     <script src="js/main.js"></script>
+    
+    <style>
+        .helper{
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        }
+
+        .lock-alert-box {
+            z-index: 9999;
+            height:100vh;
+            width:100vw;
+            background-color:#fff;
+            display:none;
+            text-align: center;
+        }
+
+        .alert-info{
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+        }
+
+        .alert-info h1{
+            margin:20px 0;
+
+        }
+
+        .alert-info h2{
+            color: #6D14E0;
+        }
+        
+    </style>
+
 </head>
 <body>
     <div class="logo-image"><svg width="72" height="25" viewBox="0 0 72 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -18,12 +52,23 @@
         </svg>
         </a>
     </div>
+
+    <!-- 복붙할 부분2 시작  -->
+    <div class="lock-alert-box">
+        <div class="helper"></div><div class="alert-info">
+            <img src="https://i.postimg.cc/0Q0pRkHf/alert-img.png" alt="">
+            <h1 class="">원활한 체험을 위해 PC화면에서 실행해주세요.</h1>
+            <h2>nun Project</h2>
+        </div>
+    </div>
+    <!-- 복붙할 부분2 끝  -->
+
     <div class="container">
         <main id="fullpage">
         <section class="section">
             <div class="intro-area">
                 <div class="land-image">
-                    <img class="land-intro-img" src="img/landing-img1.png" alt="">
+                    <img class="land-intro-img" src="https://i.postimg.cc/3R5PfBPG/landing-img1.png" alt="" >
                 </div>
                 <div class="intro-txt-wrap">
                     <div class="intro-txt-area">
@@ -49,7 +94,7 @@
         <section class="section">
             <div class="intro-area">
                 <div class="land-image">
-                    <img class="land-intro-img" src="img/landing-img2.png" alt="">
+                    <img class="land-intro-img" src="https://i.postimg.cc/ZnYsXDjW/landing-img2.png" alt="">
                 </div>
                 <div class="intro-txt-wrap">
                     <div class="intro-txt-area">
@@ -75,7 +120,7 @@
         <section class="section">
             <div class="intro-area">
                 <div class="land-image">
-                    <img class="land-intro-img" src="img/landing-img3.png" alt="">
+                    <img class="land-intro-img" src="https://i.postimg.cc/pV0spCqB/landing-img3.png" alt="">
                 </div>
                 <div class="intro-txt-wrap">
                     <div class="intro-txt-area">
@@ -100,3 +145,16 @@
     </div>
 </body>
 </html>
+<!-- 복붙할 부분3 시작  -->
+<script>
+    $(window).resize(function (){
+        let width_size = window.outerWidth;
+        
+        if(width_size <= 1040){
+            $('.lock-alert-box').css('display','block');
+            $('.container').css('display','none');
+            $('#fp-nav').css('display','none');
+        }
+    })
+</script>
+<!-- 복붙할 부분3 시작  -->
